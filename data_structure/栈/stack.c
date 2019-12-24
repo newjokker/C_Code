@@ -3,24 +3,30 @@
 #include<string.h>
 #include <time.h>
 
-#define MAXSIZE 10000000  /*栈能达到的最大容量*/
+/*
+使用数组实现栈
+*/
+
+
+#define MAXSIZE 1024 * 1024 * 100  /*栈能达到的最大容量*/
 
 typedef int DataType;  // 使用 DataType 来代替 int
 
-/*顺序栈存储结构*/
-typedef struct
+// 顺序栈存储结构
+typedef struct                  // 用typedef创建新类型，现在可以用 SeqStack 作为类型声明新的结构体变量
 {
-	DataType data[MAXSIZE];
+	DataType data[MAXSIZE];     // 这边为什么就不受制于 栈的 1M 的大小了，是不是这边只是定义，而定没有真正的分配空间？
 	int top;
 }SeqStack;
 
 
-/*初始化栈*/
+// 初始化栈
 SeqStack * initSeqStack()  // 这边返回值是一个栈指针
 {
 	SeqStack *s;
-	s = (SeqStack *)malloc(sizeof(SeqStack));  	// 指针类型的强制转换 ，malloc 开辟足够大的空间
-	s->top = -1;                        		// 这边是不是重复开辟了空间？之前 SeqStack 不就分配过一次空间了吗？
+	s = (SeqStack *)malloc(sizeof(SeqStack));  	// 指针类型的强制转换 ，malloc 开辟足够大的空间，不受制于局部变量的空间限制
+	s->top = -1;
+	printf("%f M \n", (float)(sizeof(SeqStack)/(1024.0*1024.0)));
 	return s;
 }
 
@@ -67,9 +73,7 @@ DataType getTop(SeqStack *s)
 	return (s->data[s->top]);
 }
 
-
 // -------------------------------------- 栈的使用 -----------------------------------------------------
-// 自己写的对栈的使用函数，可以输入一个 txt 里面是各个点的坐标，将这些点进行斑块合并，使用栈结构
 
 int main()
 {
@@ -81,13 +85,13 @@ int main()
     char buff[10];
     fp = fopen("C://Users//Administrator//Desktop//test.txt", "w");
 
-    for(int i=0; i<2000000;i++)
+    printf("%d\n", isEmpty(a));
+
+    for(int i=0; i<(1024*1024);i++)
     {
         push(a, i);
         itoa(getTop(a), buff, 10);
         fputs(strcat(buff, "\n"), fp);
     }
-
     fclose(fp);
-
 }
